@@ -1,3 +1,3 @@
-# Get Started
-npm install
-npm run dev  
+# Get Started: 
+# npm install
+# npm run dev  
