@@ -11,12 +11,12 @@ const  {generateID} = require('./Utility')
 
 const print = console.log;
 //use cors
-app.use(cors());
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
+
+app.use(cors({
+  origin: 'https://gethooked.netlify.ap',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 const io = new Server(server, {
   cors: {
