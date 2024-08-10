@@ -20,7 +20,7 @@ app.use(cors({
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://gethooked.netlify.app',
+    origin: 'https://gethooked.netlify.app',
     methods:  ['GET', 'POST', 'PATCH', 'DELETE'],
   }
 })
