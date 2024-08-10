@@ -13,7 +13,7 @@ const print = console.log;
 //use cors
 
 app.use(cors({
-  origin: 'https://gethooked.netlify.ap',
+  origin: 'https://gethooked.netlify.app',
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
