@@ -22,7 +22,7 @@ let getHookedAgents = [
       {
         id: 0,
         category: "video",
-        src: img2,
+        src: [img2],
         timeStamp: "2 October 2023",
         text: "who lives, who dies? Who picks them weights? 🤐",
         likes: 1223,

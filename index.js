@@ -1,23 +1,31 @@
 const express = require("express");
 const app = express();
-const PORT = 5000 || process.env.PORT;
+const PORT =  process.env.PORT || 5000;
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 const http = require('http');
 const server = http.createServer(app);
 const {Server} = require('socket.io')
+const  {generateID} = require('./Utility')
 
 const print = console.log;
 //use cors
 app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:3000',
+//   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000' 
+    origin: 'http://gethooked.netlify.app',
+    methods:  ['GET', 'POST', 'PATCH', 'DELETE'],
   }
 })
 
+app.use('/Images', express.static(path.join(__dirname, 'Images')));
 //post images
 //set up storage for  multer
 const storage = multer.diskStorage({
@@ -25,20 +33,21 @@ const storage = multer.diskStorage({
     cb(null, "Images");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    const imgName = generateID(10) + Date.now() + path.extname(file.originalname)
+    cb(null, imgName );
   },
 });
 
 //multer instance that takes in storage
 const upload = multer({ storage: storage });
 
-app.post("/upload", upload.single("image"), (req, res) => {
+app.post("/upload", upload.single("image"), async(req, res) => {
   if (!req.file) {
     res.writeHead(400, { "Content-Type": "application/json" });
     res.send(JSON.stringify({ Content: "no file uploaded" }));
     res.end();
   } else {
-    res.send(JSON.stringify({ "Content-Type": " successfully uploaded" }));
+    res.send(JSON.stringify({ "Content-Type": " successfully uploaded", "filename": req.file.filename }));
     res.end();
   }
 });
@@ -69,13 +78,13 @@ socket.on('active', id=>{
 
 
 // get all agents
-app.get("/api/gethookedAgents", async (req, res) => {
+app.get("/", async (req, res) => {
   let response = await Controller.getAgents();
   res.end(JSON.stringify(response));
 });
 
 //get single agent
-app.get("/api/gethookedAgents/:email", async (req, res) => {
+app.get("/:email", async (req, res) => {
   try {
     let email = req.params.email;
     let data = await Controller.getAgent(email);
@@ -89,7 +98,7 @@ app.get("/api/gethookedAgents/:email", async (req, res) => {
 });
 
 //delete agent
-app.delete("/api/gethookedAgents/:email", async (req, res) => {
+app.delete("/:email", async (req, res) => {
   try {
     let email = req.params.email;
     let data = await Controller.DeleteAgent(email);
@@ -103,7 +112,7 @@ app.delete("/api/gethookedAgents/:email", async (req, res) => {
 });
 
 //post agent sign up
-app.post("/api/gethookedAgents", async (req, res) => {
+app.post("/", async (req, res) => {
   const data = await Controller.addAgent(req.body);
   res.write(JSON.stringify(data));
   res.end();
@@ -125,7 +134,7 @@ app.post("/api/gethookedAgents", async (req, res) => {
 //   }
 // });
 
-app.patch("/api/gethookedAgents/update/:email", async(req, res)=>{
+app.patch("/update/:email", async(req, res)=>{
   let email = req.params.email 
   let {type, content} = req.body;
   try { 
@@ -143,7 +152,7 @@ app.patch("/api/gethookedAgents/update/:email", async(req, res)=>{
 
 
 //update agent online status
-app.patch("/api/gethookedAgents/status", async (req, res) => {
+app.patch("/status", async (req, res) => {
   let objdata = req.body;
   try {
     let results = await Controller.updateAgentStatus(objdata);
@@ -168,11 +177,8 @@ app.patch("/api/gethookedAgents/status", async (req, res) => {
 // update post
 
 
-
-
-
 //send Messages
-app.post("/api/gethookedAgent/sendMessage", (req, res) => {
+app.post("/sendMessage", (req, res) => {
   let objMessage = req.body;
   res.writeHead(200, { "Content-Type": "application/json" });
   Controller.sendMessage(objMessage);

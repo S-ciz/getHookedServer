@@ -1,5 +1,5 @@
 let data = require("./data");
-let {generateID} = require("./Utility");
+let { generateID } = require("./Utility");
 class Controller {
   // agent section
   static getAgents() {
@@ -53,10 +53,10 @@ class Controller {
             break;
           }
 
-          case 'MessagesRead': {
+          case "MessagesRead": {
             const msgId = content;
-            let msgList =  data[agentIndex].Messages
-            let msgObj = msgList.filter(msg=> msg.id === msgId);
+            let msgList = data[agentIndex].Messages;
+            let msgObj = msgList.filter((msg) => msg.id === msgId);
             msgObj[0].read = true;
             resolve(data);
             break;
@@ -114,17 +114,17 @@ class Controller {
             break;
           }
           case "removeGoal": {
-            data[agentIndex].Profile.goals = data[agentIndex].Profile.goals.filter(
-              (item) => item !== content
-            );
+            data[agentIndex].Profile.goals = data[
+              agentIndex
+            ].Profile.goals.filter((item) => item !== content);
             resolve(data);
             break;
           }
 
           case "addPost": {
             data[agentIndex].PostsArray = [
-              ...data[agentIndex].PostsArray,
               content,
+              ...data[agentIndex].PostsArray,
             ];
             resolve(data);
             break;

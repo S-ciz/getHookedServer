@@ -1,5 +1,5 @@
-const maxNumberOfID = 20;
-function generateID() {
+
+function generateID(maxNumberOfID = 20) {
   const lowercaseletters = "abcdefghijklmnopqrstuvwxyz";
   const uppercaseletters = lowercaseletters.toUpperCase();
   const lettersCombined = lowercaseletters + uppercaseletters;
